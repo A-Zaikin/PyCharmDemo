@@ -2,16 +2,30 @@ from PIL import Image
 import numpy as np
 
 
+def discretize(number, step):
+    """Дискретизирует значение с данным шагом
+
+    >>> discretize(27, 5)
+    25
+
+    >>> discretize(101, 100)
+    100
+    """
+    return int(number//step) * step
+
+
 def apply_filter(image):
+    """Проходит по изображению и применяет фильтр к каждой клетке"""
     for x in range(0, width-filter_size+1, filter_size):
         for y in range(0, height-filter_size+1, filter_size):
             filter = image[x:x+filter_size, y:y+filter_size]
             average = np.average(filter)
-            average = int(average//step_size) * step_size
+            average = discretize(average, step_size)
             filter.fill(average)
 
 
 def crop(image):
+    """Обрезает изображение под размер фильтра"""
     cropped_width = (width//filter_size) * filter_size
     cropped_height = (height//filter_size) * filter_size
     return image[:cropped_width, :cropped_height]
